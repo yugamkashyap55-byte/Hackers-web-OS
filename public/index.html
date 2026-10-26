@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Triage Command | Emergency Response Simulation</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="brand">
+        <div class="brand-mark">TC</div>
+
+        <div>
+          <h1>TRIAGE<br>COMMAND</h1>
+          <p>RESPONSE SIMULATION</p>
+        </div>
+      </div>
+
+      <div class="system-status">
+        <span class="status-dot"></span>
+        SIMULATION ONLINE
+      </div>
+
+      <nav class="navigation">
+
+        <button class="nav-item active" data-page="operations">
+          <span>01</span>
+          Operations
+        </button>
+
+        <button class="nav-item" data-page="patients">
+          <span>02</span>
+          Patient Triage
+        </button>
+
+        <button class="nav-item" data-page="evacuation">
+          <span>03</span>
+          Evacuation
+        </button>
+
+        <button class="nav-item" data-page="report">
+          <span>04</span>
+          Mission Report
+        </button>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>OFFLINE CAPABLE</div>
+        <div>DEMO BUILD v1.0</div>
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+
+        <div>
+          <p class="eyebrow">EMERGENCY RESPONSE PLATFORM</p>
+          <h2 id="pageTitle">Operations Overview</h2>
+        </div>
+
+        <div class="top-actions">
+
+          <div class="clock">
+            <small>LOCAL TIME</small>
+            <strong id="clock">--:--:--</strong>
+          </div>
+
+          <button id="refreshBtn" class="button secondary">
+            ↻ Refresh
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- ================= OPERATIONS ================= -->
+
+      <section id="operations" class="page active">
+
+        <div class="hero">
+
+          <div>
+            <p class="eyebrow">LIVE SIMULATION</p>
+
+            <h3>
+              Emergency Medical<br>
+              Response Dashboard
+            </h3>
+
+            <p>
+              A decision-support prototype for simulated
+              casualty prioritisation and evacuation planning.
+            </p>
+          </div>
+
+          <div class="hero-badge">
+            <span class="status-dot"></span>
+            SYSTEM READY
+          </div>
+
+        </div>
+
+
+        <!-- METRICS -->
+
+        <div class="metrics">
+
+          <div class="metric-card">
+            <span>Patients Tracked</span>
+            <strong id="patientsMetric">0</strong>
+            <small>SIMULATED CASES</small>
+          </div>
+
+          <div class="metric-card danger">
+            <span>Immediate Priority</span>
+            <strong id="immediateMetric">0</strong>
+            <small>HIGH PRIORITY</small>
+          </div>
+
+          <div class="metric-card">
+            <span>Routes Available</span>
+            <strong id="routesMetric">0</strong>
+            <small>ACCESSIBLE</small>
+          </div>
+
+          <div class="metric-card">
+            <span>Medical Capacity</span>
+            <strong id="capacityMetric">8</strong>
+            <small>OF 20 AVAILABLE</small>
+          </div>
+
+        </div>
+
+
+        <!-- GRID -->
+
+        <div class="dashboard-grid">
+
+          <!-- MAP -->
+
+          <article class="card map-card">
+
+            <div class="card-header">
+
+              <div>
+                <p class="eyebrow">SPATIAL OVERVIEW</p>
+                <h3>Response Area</h3>
+              </div>
+
+              <span class="live-label">● LIVE</span>
+
+            </div>
+
+            <div class="map-wrapper">
+              <canvas id="mapCanvas"></canvas>
+            </div>
+
+            <div class="legend">
+
+              <span>
+                <i class="legend-dot immediate"></i>
+                Immediate
+              </span>
+
+              <span>
+                <i class="legend-dot urgent"></i>
+                Urgent
+              </span>
+
+              <span>
+                <i class="legend-dot stable"></i>
+                Stable
+              </span>
+
+              <span>
+                <i class="legend-line"></i>
+                Route
+              </span>
+
+            </div>
+
+          </article>
+
+
+          <!-- PRIORITY -->
+
+          <article class="card">
+
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">QUEUE</p>
+                <h3>Priority Queue</h3>
+              </div>
+            </div>
+
+            <div id="priorityList" class="priority-list"></div>
+
+          </article>
+
+        </div>
+
+
+        <!-- SECOND GRID -->
+
+        <div class="dashboard-grid lower">
+
+          <article class="card">
+
+            <div class="card-header">
+
+              <div>
+                <p class="eyebrow">TELEMETRY</p>
+                <h3>Patient Signal Trend</h3>
+              </div>
+
+              <span class="chart-label">PULSE / SIMULATION</span>
+
+            </div>
+
+            <div class="chart-box">
+              <canvas id="telemetryChart"></canvas>
+            </div>
+
+          </article>
+
+
+          <article class="card">
+
+            <div class="card-header">
+
+              <div>
+                <p class="eyebrow">EVACUATION</p>
+                <h3>Route Status</h3>
+              </div>
+
+            </div>
+
+            <div id="routeList" class="route-list"></div>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= PATIENTS ================= -->
+
+      <section id="patients" class="page">
+
+        <div class="section-heading">
+
+          <div>
+            <p class="eyebrow">SIMULATED TELEMETRY</p>
+            <h3>Patient Triage</h3>
+          </div>
+
+          <span class="info-chip">
+            DEMONSTRATION ONLY
+          </span>
+
+        </div>
+
+
+        <article class="card table-card">
+
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">CASE REGISTER</p>
+              <h3>Tracked Patients</h3>
+            </div>
+          </div>
+
+          <div class="table-scroll">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Unit</th>
+                  <th>Zone</th>
+                  <th>Pulse</th>
+                  <th>SpO₂</th>
+                  <th>Resp.</th>
+                  <th>Pain</th>
+                  <th>Priority</th>
+                </tr>
+              </thead>
+
+              <tbody id="patientTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </article>
+
+
+        <div class="two-column">
+
+          <!-- TRIAGE TOOL -->
+
+          <article class="card">
+
+            <div class="card-header">
+
+              <div>
+                <p class="eyebrow">DECISION SUPPORT</p>
+                <h3>Simulated Triage Check</h3>
+              </div>
+
+            </div>
+
+            <form id="triageForm">
+
+              <div class="form-grid">
+
+                <label>
+                  Pulse
+                  <input id="pulse" type="number" value="96">
+                  <small>bpm</small>
+                </label>
+
+                <label>
+                  SpO₂
+                  <input id="spo2" type="number" value="97">
+                  <small>%</small>
+                </label>
+
+                <label>
+                  Respiration
+                  <input id="respiration" type="number" value="18">
+                  <small>/min</small>
+                </label>
+
+                <label>
+                  Pain
+                  <input id="pain" type="number" min="0" max="10" value="4">
+                  <small>0–10</small>
+                </label>
+
+              </div>
+
+              <button class="button primary" type="submit">
+                Run Simulation
+              </button>
+
+            </form>
+
+            <div id="triageResult" class="triage-result">
+              Enter simulated values and run the model.
+            </div>
+
+          </article>
+
+
+          <!-- EXPLANATION -->
+
+          <article class="card concept-card">
+
+            <p class="eyebrow">HOW IT WORKS</p>
+
+            <h3>Transparent Decision Model</h3>
+
+            <div class="model-step">
+              <strong>01</strong>
+              <span>Collect simulated observations</span>
+            </div>
+
+            <div class="model-step">
+              <strong>02</strong>
+              <span>Calculate weighted priority score</span>
+            </div>
+
+            <div class="model-step">
+              <strong>03</strong>
+              <span>Assign simulated priority class</span>
+            </div>
+
+            <div class="model-step">
+              <strong>04</strong>
+              <span>Present decision-support information</span>
+            </div>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= EVACUATION ================= -->
+
+      <section id="evacuation" class="page">
+
+        <div class="section-heading">
+
+          <div>
+            <p class="eyebrow">LOGISTICS SIMULATION</p>
+            <h3>Evacuation Planning</h3>
+          </div>
+
+          <span class="info-chip">
+            ROUTE SIMULATION
+          </span>
+
+        </div>
+
+
+        <div id="evacuationRoutes" class="route-grid"></div>
+
+
+        <article class="card decision-card">
+
+          <p class="eyebrow">ROUTE INTELLIGENCE</p>
+
+          <h3>Recommended Simulation Priority</h3>
+
+          <div class="recommendation">
+
+            <div class="recommendation-number">
+              01
+            </div>
+
+            <div>
+              <strong>North Corridor</strong>
+
+              <p>
+                Lowest simulated risk among currently
+                accessible routes.
+              </p>
+
+              <div class="recommendation-tags">
+                <span>OPEN</span>
+                <span>ETA 8 MIN</span>
+                <span>RISK 18%</span>
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+
+      </section>
+
+
+      <!-- ================= REPORT ================= -->
+
+      <section id="report" class="page">
+
+        <div class="section-heading">
+
+          <div>
+            <p class="eyebrow">DOCUMENTATION</p>
+            <h3>Mission Report</h3>
+          </div>
+
+          <button id="printBtn" class="button primary">
+            Print / Save PDF
+          </button>
+
+        </div>
+
+
+        <article class="card report-card">
+
+          <div class="report-header">
+
+            <div>
+              <div class="report-logo">TC</div>
+            </div>
+
+            <div>
+              <p class="eyebrow">SIMULATION REPORT</p>
+              <h3>Emergency Response Summary</h3>
+              <p id="reportDate"></p>
+            </div>
+
+          </div>
+
+
+          <div class="report-summary">
+
+            <div>
+              <span>Patients</span>
+              <strong id="reportPatients">0</strong>
+            </div>
+
+            <div>
+              <span>Immediate</span>
+              <strong id="reportImmediate">0</strong>
+            </div>
+
+            <div>
+              <span>Routes</span>
+              <strong id="reportRoutes">0</strong>
+            </div>
+
+            <div>
+              <span>Capacity</span>
+              <strong>8 / 20</strong>
+            </div>
+
+          </div>
+
+
+          <h4>Route Summary</h4>
+
+          <div id="reportRoutesList"></div>
+
+
+          <div class="disclaimer">
+
+            <strong>IMPORTANT — SIMULATION ONLY</strong>
+
+            <p>
+              This interface is a software demonstration.
+              It does not provide medical diagnosis,
+              treatment instructions, real-world emergency
+              dispatch, targeting, or operational advice.
+              All patient data, locations, routes and
+              outcomes shown are fictional simulations.
+            </p>
+
+          </div>
+
+        </article>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
